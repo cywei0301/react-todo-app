@@ -1,9 +1,11 @@
 import React from 'react';
 import TodoList from './TodoList';
+import Header from './Header';
 
 class TodoContainer extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+        
         this.state = {
             todos: [
                 {
@@ -21,14 +23,27 @@ class TodoContainer extends React.Component {
                     title: "Deploy to live server",
                     completed: false,
                 }
-            ],
+            ]
         };
+
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(id) {
+        this.setState({
+            todos: this.state.todos.map(todo => {
+                if (todo.id === id) 
+                  todo.completed = !todo.completed;
+                return todo;
+            })
+        });
     }
 
     render() {
         return (
             <div>
-                <TodoList todos={this.state.todos}/>
+                <Header />
+                <TodoList todos={this.state.todos} handleChangeProps={this.handleChange} />
             </div>
         )
     }
