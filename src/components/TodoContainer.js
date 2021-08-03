@@ -30,20 +30,41 @@ class TodoContainer extends React.Component {
     }
 
     handleChange(id) {
-        this.setState({
-            todos: this.state.todos.map(todo => {
-                if (todo.id === id) 
-                  todo.completed = !todo.completed;
+        //Note how we are wrapping the object in the setState callback with a parenthesis, (). 
+        //An alternative is to use the return statement to explicitly return the object 
+        this.setState(preState => ({
+            todos: preState.todos.map(todo => {
+                if (todo.id === id) {
+                    return {
+                        ...todo,
+                        completed: !todo.completed,
+                    }
+                }
                 return todo;
             })
-        });
+        }));
     }
+
+    delTodo = id => {
+        this.setState({
+            todos: [
+                ...this.state.todos.filter(todo => {
+                    return todo.id !== id;
+                })
+            ]
+        });
+        console.log("deleted",id);
+    };
 
     render() {
         return (
             <div>
                 <Header />
-                <TodoList todos={this.state.todos} handleChangeProps={this.handleChange} />
+                <TodoList 
+                    todos={this.state.todos} 
+                    handleChangeProps={this.handleChange} 
+                    deleteTodoProps={this.delTodo}
+                />
             </div>
         )
     }
